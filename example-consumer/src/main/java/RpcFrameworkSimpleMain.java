@@ -1,6 +1,6 @@
 import cn.shenxw.api.Hello;
 import cn.shenxw.api.HelloService;
-import cn.shenxw.transport.RpcClientProxy;
+import cn.shenxw.transport.socket.RpcClientProxy;
 
 /**
  * create by shenxiangwei on 2021/5/16 上午 12:45

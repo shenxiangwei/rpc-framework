@@ -1,5 +1,6 @@
 package cn.shenxw.provider;
 
+import cn.shenxw.annotation.RpcService;
 import cn.shenxw.api.Hello;
 import cn.shenxw.api.HelloService;
 import org.slf4j.Logger;
@@ -8,6 +9,7 @@ import org.slf4j.LoggerFactory;
 /**
  * create by shenxiangwei on 2021/5/16 上午 12:30
  */
+@RpcService
 public class HelloServiceImpl implements HelloService {
     private static final Logger logger = LoggerFactory.getLogger(HelloServiceImpl.class);
 

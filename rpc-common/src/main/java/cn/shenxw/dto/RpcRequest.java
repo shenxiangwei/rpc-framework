@@ -1,4 +1,4 @@
-package cn.shenxw;
+package cn.shenxw.dto;
 
 import lombok.Builder;
 import lombok.Data;

@@ -1,16 +1,21 @@
-package cn.shenxw.transport;
+package cn.shenxw.transport.socket;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.stereotype.Component;
 
 import java.io.IOException;
 import java.net.ServerSocket;
 import java.net.Socket;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
 import java.util.concurrent.*;
 
 /**
  * create by shenxiangwei on 2021/5/16 上午 12:40
  */
+@Component
 public class RpcServer {
     private ExecutorService threadPool;
     private static final Logger logger = LoggerFactory.getLogger(RpcServer.class);
@@ -27,7 +32,6 @@ public class RpcServer {
 
     /**
      * 服务端主动注册服务
-     * TODO 修改为注解然后扫描
      */
     public void register(Object service, int port) {
         try (ServerSocket server = new ServerSocket(port);) {
@@ -37,8 +41,12 @@ public class RpcServer {
                 logger.info("client connected");
                 threadPool.execute(new WorkerThread(socket, service));
             }
+
+
         } catch (IOException e) {
             logger.error("occur IOException:", e);
         }
     }
+
+
 }
