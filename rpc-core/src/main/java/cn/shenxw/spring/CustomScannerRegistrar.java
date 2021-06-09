@@ -13,6 +13,8 @@ import org.springframework.core.type.StandardAnnotationMetadata;
 import org.springframework.stereotype.Component;
 
 /**
+ * 自定义注解注册类
+ *
  * @author shenxiangwei
  * @date 2021/6/7 4:33 下午
  */
@@ -44,10 +46,10 @@ public class CustomScannerRegistrar implements ImportBeanDefinitionRegistrar, Re
         CustomScanner rpcServiceScanner = new CustomScanner(beanDefinitionRegistry, RpcService.class);
         // Scan the Component annotation
         CustomScanner springBeanScanner = new CustomScanner(beanDefinitionRegistry, Component.class);
-        if (resourceLoader != null) {
-            rpcServiceScanner.setResourceLoader(resourceLoader);
-            springBeanScanner.setResourceLoader(resourceLoader);
-        }
+//        if (resourceLoader != null) {
+//            rpcServiceScanner.setResourceLoader(resourceLoader);
+//            springBeanScanner.setResourceLoader(resourceLoader);
+//        }
         int springBeanAmount = springBeanScanner.scan(SPRING_BEAN_BASE_PACKAGE);
         log.info("springBeanScanner扫描的数量 [{}]", springBeanAmount);
         int rpcServiceCount = rpcServiceScanner.scan(rpcScanBasePackages);

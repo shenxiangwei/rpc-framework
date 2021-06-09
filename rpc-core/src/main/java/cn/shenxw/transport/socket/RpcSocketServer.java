@@ -1,4 +1,4 @@
-package cn.shenxw.transport;
+package cn.shenxw.transport.socket;
 
 import lombok.extern.slf4j.Slf4j;
 

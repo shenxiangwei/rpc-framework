@@ -2,6 +2,11 @@ package cn.shenxw.spring;
 
 import cn.shenxw.annotation.RpcReference;
 import cn.shenxw.annotation.RpcService;
+import cn.shenxw.config.RpcServiceConfig;
+import cn.shenxw.dto.RpcRequest;
+import cn.shenxw.extension.ExtensionLoader;
+import cn.shenxw.registry.ServiceDiscovery;
+import cn.shenxw.registry.ServiceRegistry;
 import cn.shenxw.transport.socket.RpcClientProxy;
 import cn.shenxw.transport.socket.RpcServer;
 import lombok.SneakyThrows;
@@ -14,6 +19,8 @@ import org.springframework.context.ApplicationContextAware;
 import org.springframework.stereotype.Component;
 
 import java.lang.reflect.Field;
+import java.net.InetAddress;
+import java.net.InetSocketAddress;
 
 /**
  * call this method before creating the bean to see if the class is annotated
@@ -40,7 +47,13 @@ public class SpringBeanPostProcessor implements BeanPostProcessor {
             // get RpcService annotation
             RpcService rpcService = bean.getClass().getAnnotation(RpcService.class);
 
-            rpcServer.register(bean,9999);
+            //构造rpc服务配置类
+            RpcServiceConfig rpcServiceConfig = RpcServiceConfig.builder()
+                    .group(rpcService.group())
+                    .version(rpcService.version())
+                    .service(bean).build();
+
+            rpcServer.register(bean,9999,rpcServiceConfig);
 
         }
         return bean;
@@ -53,7 +66,16 @@ public class SpringBeanPostProcessor implements BeanPostProcessor {
         for (Field declaredField : declaredFields) {
             RpcReference rpcReference = declaredField.getAnnotation(RpcReference.class);
             if (rpcReference != null) {
-                RpcClientProxy rpcClientProxy = new RpcClientProxy("127.0.0.1", 9999);
+
+                ServiceDiscovery nacos = ExtensionLoader.getExtensionLoader(ServiceDiscovery.class).getExtension("nacos");
+
+                RpcRequest rpcRequest = RpcRequest.builder()
+                        .interfaceName(declaredField.getType().getName())
+                        .build();
+
+                InetSocketAddress inetSocketAddress = nacos.lookupService(rpcRequest);
+                RpcClientProxy rpcClientProxy =
+                        new RpcClientProxy(inetSocketAddress.getHostString(), inetSocketAddress.getPort());
                 Object clientProxy = rpcClientProxy.getProxy(declaredField.getType());
                 declaredField.setAccessible(true);
                 try {

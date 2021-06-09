@@ -1,6 +1,6 @@
-package cn.shenxw.transport;
+package cn.shenxw.transport.socket;
 
-import cn.shenxw.RpcRequest;
+import cn.shenxw.dto.RpcRequest;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
